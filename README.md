@@ -27,6 +27,12 @@ git clone https://github.com/nadeemjeee/Node.js-MongoDB-Redis-Docker-Project.git
 ```bash
 cd node-learnong
 ```
+```bash
+docker compose up --build 
+```
+```bash
+docker compose logs app 
+```
 
 Features
 REST API with Express
@@ -34,6 +40,9 @@ MongoDB database integration
 Redis caching
 Docker containerization
 Clean folder structure (MVC pattern)
+.env setup
+Validation
+Full CRUD API
 
 ### Author
 Nadeem
