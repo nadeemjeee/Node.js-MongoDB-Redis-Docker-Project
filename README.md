@@ -34,7 +34,8 @@ docker compose up --build
 docker compose logs app 
 ```
 
-Features
+### Features:
+
 REST API with Express
 MongoDB database integration
 Redis caching
