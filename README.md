@@ -1,10 +1,14 @@
 #  Node.js + MongoDB + Redis + Docker Project
-## Description
-I built a REST API using Node.js and Express.
-I structured it using MVC (models, routes, controllers).
-I used MongoDB for persistent storage.
-I implemented Redis caching to improve performance.
-I containerized the app using Docker and Docker Compose.
+
+##  Description
+
+I built a REST API using Node.js and Express.  
+It follows the MVC architecture (models, routes, controllers).  
+
+MongoDB is used for persistent storage, and Redis is implemented for caching to improve performance.  
+
+The application is fully containerized using Docker and Docker Compose.
+
 -----
 ## Tech Stack
 
@@ -23,3 +27,13 @@ git clone https://github.com/nadeemjeee/Node.js-MongoDB-Redis-Docker-Project.git
 ```bash
 cd node-learnong
 ```
+
+Features
+REST API with Express
+MongoDB database integration
+Redis caching
+Docker containerization
+Clean folder structure (MVC pattern)
+
+### Author
+Nadeem
