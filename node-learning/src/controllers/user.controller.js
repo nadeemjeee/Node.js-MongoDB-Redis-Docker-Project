@@ -1,6 +1,7 @@
 const User = require("../models/user.model");
 const { redisClient } = require("../config/redis");
 
+//CREATE
 const createUser = async (req, res) => {
   try {
     const newUser = new User({
@@ -10,6 +11,7 @@ const createUser = async (req, res) => {
 
     await newUser.save();
 
+    // CLEAR CACHE
     await redisClient.del("users");
 
     res.json({
@@ -20,7 +22,7 @@ const createUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
+// READ (with Redis)
 const getUsers = async (req, res) => {
   try {
     const cached = await redisClient.get("users");
@@ -44,8 +46,46 @@ const getUsers = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+// UPDATE
+const updateUser = async (req, res) => {
+  try {
+    const updated = await User.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    // clear cache
+    await redisClient.del("users");
+
+    res.json({
+      message: "User updated",
+      data: updated
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// DELETE
+const deleteUser = async (req, res) => {
+  try {
+    await User.findByIdAndDelete(req.params.id);
+
+    // clear cache
+    await redisClient.del("users");
+
+    res.json({
+      message: "User deleted"
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 
 module.exports = {
   createUser,
-  getUsers
+  getUsers,
+  updateUser,
+  deleteUser
 };
