@@ -1,28 +1,46 @@
 const User = require("../models/user.model");
 const { redisClient } = require("../config/redis");
 
-//CREATE
+// CREATE
 const createUser = async (req, res) => {
   try {
-    const newUser = new User({
-      name: req.body.name,
-      age: req.body.age
-    });
+    const { name, age } = req.body;
 
+    // validation
+    if (!name || age === undefined) {
+      return res.status(400).json({
+        message: "Name and age are required"
+      });
+    }
+
+    if (typeof name !== "string" || name.trim() === "") {
+      return res.status(400).json({
+        message: "Name must be a valid string"
+      });
+    }
+
+    if (typeof age !== "number") {
+      return res.status(400).json({
+        message: "Age must be a number"
+      });
+    }
+
+    const newUser = new User({ name, age });
     await newUser.save();
 
-    // CLEAR CACHE
     await redisClient.del("users");
 
     res.json({
       message: "User saved",
       data: newUser
     });
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
-// READ (with Redis)
+
+// READ
 const getUsers = async (req, res) => {
   try {
     const cached = await redisClient.get("users");
@@ -42,10 +60,12 @@ const getUsers = async (req, res) => {
       message: "From MongoDB",
       data: users
     });
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 };
+
 // UPDATE
 const updateUser = async (req, res) => {
   try {
@@ -55,13 +75,13 @@ const updateUser = async (req, res) => {
       { new: true }
     );
 
-    // clear cache
     await redisClient.del("users");
 
     res.json({
       message: "User updated",
       data: updated
     });
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -72,12 +92,12 @@ const deleteUser = async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id);
 
-    // clear cache
     await redisClient.del("users");
 
     res.json({
       message: "User deleted"
     });
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
